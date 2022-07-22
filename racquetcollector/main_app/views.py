@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
-from django.http import HttpResponse
-from .models import Racquet
+# from django.http import HttpResponse
+from .models import Racquet, User
 from .forms import RestringForm
 
 # Define the home view
@@ -19,9 +19,12 @@ def racquets_index(request):
 
 def racquets_detail(request, racquet_id):
   racquet = Racquet.objects.get(id=racquet_id)
+  id_list = racquet.users.all().values_list('id')
+  users_racquet_doesnt_have = User.objects.exclude(id__in=id_list)
   restring_form = RestringForm()
   return render(request, 'racquets/detail.html', { 
-    'racquet': racquet, 'restring_form': restring_form 
+    'racquet': racquet, 'restring_form': restring_form ,
+    'users':users_racquet_doesnt_have
     })
 
 def add_restring(request, racquet_id):
@@ -34,7 +37,19 @@ def add_restring(request, racquet_id):
     new_restring = form.save(commit=False)
     new_restring.racquet_id = racquet_id
     new_restring.save()
-  return redirect('detail', racquet_id=racquet_id)   
+  return redirect('detail', racquet_id=racquet_id)  
+
+def assoc_restring(request, racquet_id, restring_id):
+      # Note that you can pass a toy's id instead of the whole toy object
+  Racquet.objects.get(id=racquet_id).restrings.add(restring_id)
+  return redirect('detail', racquet_id=racquet_id) 
+
+def assoc_user(request, racquet_id, user_id):
+      # Note that you can pass a toy's id instead of the whole toy object
+  Racquet.objects.get(id=racquet_id).users.add(user_id)
+  return redirect('detail', racquet_id=racquet_id) 
+
+
 
 class RacquetCreate(CreateView):
   model = Racquet

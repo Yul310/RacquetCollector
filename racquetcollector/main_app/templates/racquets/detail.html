@@ -68,6 +68,29 @@
       <h5>No Users 😔</h5>
     {% endif %}
   </div>
+<!-- Available users will come after this line -->
+  <div class="col s6">
+    <h3>Available Users</h3>
+    {% if users.count %}
+      {% for user in users.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A <span >{{ user.name }}</span> {{ user.discription }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'assoc_user' racquet.id user.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>{{racquet.name}} Already Has All users Available</h5>
+    {% endif %}
+  </div>
 
 <script>
   const dateEl = document.getElementById('id_date');

@@ -10,4 +10,5 @@ urlpatterns = [
      path('racquets/<int:pk>/update/', views.RacquetUpdate.as_view(), name='racquets_update'),
      path('racquets/<int:pk>/delete/', views.RacquetDelete.as_view(), name='racquets_delete'),
      path('racquets/<int:racquet_id>/add_restring/', views.add_restring, name='add_restring'),
+     path('racquets/<int:racquet_id>/assoc_user/<int:user_id>/', views.assoc_user, name='assoc_user'),
 ]
